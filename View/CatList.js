@@ -27,7 +27,8 @@ var CatList = React.createClass({
 			showAll: false,
 			nav1: '全部分类',
 			nav2: '全部类型',
-			nav3: '综合排序'
+			nav3: '综合排序',
+			catname0: '全部分类'
 		}
 	},
 	render: function(){
@@ -141,35 +142,32 @@ var CatList = React.createClass({
 	_setProps: function(name, val, level, wording){
 		var change = {};
 		change[name] = val;
-		change['nav1'] = wording;
+		change.nav1 = wording;
+		// 保存上一级分类名
+		change['catname' + level] = wording;
+		/*	
+		* 不要在 function 里面多次掉调用 setState，底层逻辑好像会合并起来，
+		* 可能会有问题
+		*/
+		
 
-		this.setState(Object.assign({}, this.state, change));
-
-		// 点击全部
-		//alert(val + '/' + name)
-		// if(!val){
-		// 	this.setState(Object.assign({}, this.state, {
-		// 		showAll: false
-		// 	}));
-		// 	//return;
-		// }
-
-		if(level == 3 || !val){
-
-			//alert('mt=' + this.state.mt + '&st=' + this.state.st + '&tt=' + val);
-			
+		/*		
+		* 选择三级菜单，或选择菜单中的全部
+		* 1. 修改props，触发listView更新数据
+		* 2. 修改state，隐藏分类信息，同时修改导航的wording
+		*/
+		if(level == 3 || !val){			
+			change.showAll = false;
+			// 当前级选择 “全部” 时，导航需要显示上一级分类名
+			!val && (change.nav1 = this.state['catname' + (level - 1)]);
 			this.props[name]({
 				mt: this.state.mt,
 				tt: val,
 				st: this.state.st
 			});
-			this.setState(Object.assign({}, this.state, {
-				showAll: false
-			}));
+			
 		}
-		
-
-		//this.props[name](name, val);
+		this.setState(Object.assign({}, this.state, change));
 	},
 	_setAllCats: function(name, cats){
 		this.setState(Object.assign({}, this.state, {
@@ -180,7 +178,7 @@ var CatList = React.createClass({
 			tt: cats.tt
 		}));
 
-		alert('mt=' + this.state.mt + '&st=' + this.state.st + '&tt=' + this.state.tt);
+		//alert('mt=' + this.state.mt + '&st=' + this.state.st + '&tt=' + this.state.tt);
 
 		this.props[name]({
 			mt: this.state.mt,
@@ -204,7 +202,6 @@ var styles = StyleSheet.create({
 		//flex: 1,
 		flexDirection: 'row',
         color : '#bababa',
-        //paddingTop: 41,
         height: 41,
         backgroundColor: '#f8f8f8',
         borderWidth: 1 / PixelRatio.get(),

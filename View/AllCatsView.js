@@ -56,14 +56,6 @@ var AllCatsView = React.createClass({
 		.then((repsonseData) => {
 			var data = repsonseData.result.catgoryList,
 				cat1 = [];
-/*			for(var i in data){
-				cat1.push({
-					key: 'mt',
-					name: data[i]['n'],
-					level: 1,
-					id: i
-				});
-			}*/
 			cat1 = this._getValFromArr(data, 1);
 			var cat2 = [],
 				cat3 = [];

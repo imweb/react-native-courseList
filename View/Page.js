@@ -57,6 +57,12 @@ var Page = React.createClass({
 		)
 	},
   _setProps: function(name, val){
+    /*  
+    * 组件间的通讯机制，通过 prop 实现，
+    * 通过 props 传递的 function，子组件将自身的变化设置父组件的 state，
+    * 同级组件的 props 设置成父组件的 state
+    * 组件内部 componentWillReceiveProps 方法会捕获这些 props 的变化
+    */
     var change = {};
     change[name] = val;
     this.setState(Object.assign({}, this.state, change));
@@ -66,7 +72,6 @@ var Page = React.createClass({
     for(var k in catsObjs){
       test += '&' + k + '=' + catsObjs[k];
     }
-    //alert('_setAllCats' + test)
     this.setState(Object.assign({}, this.state, catsObjs));
   },
 	_search: function(){
