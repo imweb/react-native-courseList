@@ -18,19 +18,16 @@ var {
   View,
 } = React;
 
-/*			<View style={{flex: 1}}>
-				<CatList />
-				<CList />
-			</View>*/
 var Page = React.createClass({
 	getInitialState: function(){
 		return {
-			curCat: 1002,
-			searchText: 'Search'
+			searchText: 'Search',
+      video: 0,
+      sort: 0
 		}
 	},
 	render: function(){
-		      var textInput = (
+		var textInput = (
         <View style={styles.searchRow}>
           <TextInput
             autoCapitalize="none"
@@ -41,28 +38,39 @@ var Page = React.createClass({
             style={[styles.searchTextInput, styles.searchTextInputIOS]}
           />
         </View>);
+    // 这里Clist cgi的参数有5个依赖于catList, mt, st, tt(分类信息),
+    // video 直播或录播(0, 1, 2)
+    // sort 排序（0， 1， 2）
 		return (
 	      <View style={styles.listContainer}>
 	        {textInput}
-	        <CatList mt = {this._refresh} video={this._setVideo}/>
-	        <CList mt={this.state.curCat} video={this.state.video}/>
+          <CList mt={this.state.mt}  st={this.state.st} tt={this.state.tt} sort={this.state.sort} video={this.state.video}/>
+	        <CatList 
+            mt={this._setAllCats}
+            st={this._setAllCats}
+            tt={this._setAllCats}
+            video={this._setProps}
+            sort={this._setProps}
+            />
+	        
 	      </View>
 		)
 	},
+  _setProps: function(name, val){
+    var change = {};
+    change[name] = val;
+    this.setState(Object.assign({}, this.state, change));
+  },
+  _setAllCats: function(catsObjs){
+    var test = ''
+    for(var k in catsObjs){
+      test += '&' + k + '=' + catsObjs[k];
+    }
+    //alert('_setAllCats' + test)
+    this.setState(Object.assign({}, this.state, catsObjs));
+  },
 	_search: function(){
 
-	},
-	_refresh: function(cat){
-		this.setState(Object.assign({}, this.state, {curCat: cat}));
-
-		// this.setState({
-		// 	curCat: cat,
-		// 	video: 0
-		// });
-	},
-	_setVideo: function(video){
-		//alert('video' + video);
-		this.setState(Object.assign({}, this.state, {video: video}));
 	}
 });
 
@@ -72,7 +80,7 @@ var styles = StyleSheet.create({
     flex: 1,
   },
   list: {
-    backgroundColor: '#eeeeee',
+    backgroundColor: '#eee',
   },
   sectionHeader: {
     padding: 5,
@@ -92,7 +100,7 @@ var styles = StyleSheet.create({
   },
   separator: {
     height: 1 / PixelRatio.get(),
-    backgroundColor: '#bbbbbb',
+    backgroundColor: '#bbb',
     marginLeft: 15,
   },
   rowTitleText: {
@@ -105,15 +113,15 @@ var styles = StyleSheet.create({
     lineHeight: 20,
   },
   searchRow: {
-    backgroundColor: '#eeeeee',
+    backgroundColor: '#eee',
     paddingTop: 75,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 10,
+    paddingBottom: 51,
   },
   searchTextInput: {
     backgroundColor: 'white',
-    borderColor: '#cccccc',
+    borderColor: '#ccc',
     borderRadius: 3,
     borderWidth: 1,
     paddingLeft: 8,

@@ -22,7 +22,6 @@ var CList = React.createClass({
 			dataSource: ds/*.cloneWithRows(data)*/,
 			load: false,
 			list: [],
-			mt: 1001,
 			curPage: 0
 		}
 	},	
@@ -30,14 +29,18 @@ var CList = React.createClass({
 		//var mt = this.props.mt || 1002;
         this.fetchData('');
     },
-    componentWillReceiveProps: function(){
+    componentWillReceiveProps: function(nextProps){
     	var params = {};
-    	params.mt = this.props.mt || 1002;
-    	params.video = this.props.video;
-
+    	// params.sort = this.props.sort || 0;
+    	// params.video = this.props.video || 0;
+    	params.sort = nextProps.sort || 0;
+    	params.video = nextProps.video || 0;
+    	params.mt = nextProps.mt;
+    	params.st = nextProps.st;
+    	params.tt = nextProps.tt;
     	var query = '';
     	for(var key in params){
-    		if(params[key]) {
+    		if(typeof params[key] != 'undefined') {
     			query += '&' + key + '=' + params[key];
     		}
     		
@@ -45,10 +48,10 @@ var CList = React.createClass({
     	//alert(query);
         this.fetchData(query);
     },
-	fetchData: function(mt, page){
+	fetchData: function(query, page){
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-		fetch(COURSE_LIST_CGI + mt + '&page=' + (page || 1), {
+		//alert(COURSE_LIST_CGI + query + '&page=' + (page || 1))
+		fetch(COURSE_LIST_CGI + query + '&page=' + (page || 1), {
 			method: 'GET',
 			headers: {
 				'Referer': 'http://mobileapp.ke.qq.com'
@@ -68,7 +71,6 @@ var CList = React.createClass({
 				curPage: page || 1,
 				load: true,
 				list: list,
-				mt: mt,
 				//dataSource: this.state.dataSource.concat(ds.cloneWithRows(repsonseData.result.list))
 				dataSource: this.state.dataSource.cloneWithRows(list)
 			})
@@ -78,7 +80,6 @@ var CList = React.createClass({
 				curPage: page || 1,
 				load: true,
 				list: [],
-				mt: 1001,
 				//dataSource: this.state.dataSource.concat(ds.cloneWithRows(repsonseData.result.list))
 				dataSource: this.state.dataSource.cloneWithRows([])
 			})
@@ -108,6 +109,7 @@ var CList = React.createClass({
 		course._price = course.price == 0 ? '免费' : '¥' + (course.price / 100).toFixed(2);
 		course._priceCla = {};
 		course._priceCla.color = course.price == 0 ? '#5db61b' : '#e85308';
+		course._num = course.see_num > 0 ? course.see_num + '人观看' : course.apply_num + '人报名';
 		return(
 		    <TouchableOpacity>
 		        <View style={styles.row}>
@@ -120,7 +122,7 @@ var CList = React.createClass({
 		                    <Text style={[styles.price,course._priceCla]}>	                    
 		                    {course._price}
 		                    </Text>
-		                    <Text style={{color: 'gray', flex: 1}}>{course.see_num}人观看</Text>
+		                    <Text style={{color: 'gray', flex: 1}}>{course._num}</Text>
 		                    </View>
 		                </View>
 		            </View>
