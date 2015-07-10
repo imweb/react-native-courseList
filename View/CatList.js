@@ -150,7 +150,6 @@ var CatList = React.createClass({
 		* 可能会有问题
 		*/
 		
-
 		/*		
 		* 选择三级菜单，或选择菜单中的全部
 		* 1. 修改props，触发listView更新数据
@@ -192,10 +191,11 @@ var CatList = React.createClass({
 var styles = StyleSheet.create({
 	wrapper: {
 		position: 'absolute',
-		top: 75,
+		//top: 75,
+		top: 64,
 		left: 0,
 		right: 0,
-		marginTop: 41
+		//marginTop: 41
 		// backgroundColor: 'red'
 	},
 	nav: {

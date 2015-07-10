@@ -34,6 +34,7 @@ var Page = React.createClass({
             autoCorrect={false}
             clearButtonMode="always"
             onChangeText={this._search.bind(this)}
+            onSubmitEditing = {this._onSubmit}
             placeholder="Search..."
             style={[styles.searchTextInput, styles.searchTextInputIOS]}
           />
@@ -43,8 +44,15 @@ var Page = React.createClass({
     // sort 排序（0， 1， 2）
 		return (
 	      <View style={styles.listContainer}>
-	        {textInput}
-          <CList mt={this.state.mt}  st={this.state.st} tt={this.state.tt} sort={this.state.sort} video={this.state.video}/>
+
+          <CList 
+            mt={this.state.mt}  
+            st={this.state.st} 
+            tt={this.state.tt} 
+            sort={this.state.sort} 
+            video={this.state.video}
+            word={this.state.word}
+            />
 	        <CatList 
             mt={this._setAllCats}
             st={this._setAllCats}
@@ -76,13 +84,20 @@ var Page = React.createClass({
   },
 	_search: function(){
 
-	}
+
+	},
+    _onSubmit: function(event){
+        this.setState(Object.assign({}, this.state, {
+            word: event.nativeEvent.text
+        }))
+    }
 });
 
 
 var styles = StyleSheet.create({
   listContainer: {
     flex: 1,
+    paddingTop: 64
   },
   list: {
     backgroundColor: '#eee',

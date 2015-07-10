@@ -15,6 +15,19 @@ var {
 var COURSE_LIST_CGI = 'http://ke.qq.com/cgi-bin/pubAccount/courseList?is_ios=1&count=10&no_pc_only=1&pay_type=0&priority=1';
 
 
+var decodeHtml = function(str){ 
+  var s = "";   
+  if (str.length == 0) return "";   
+  s = str.replace(/&gt;/g, "&");   
+  s = s.replace(/&lt;/g, "<");   
+  s = s.replace(/&gt;/g, ">");   
+  s = s.replace(/&nbsp;/g, " ");   
+  s = s.replace(/&#39;/g, "\'");   
+  s = s.replace(/&quot;/g, "\"");   
+  s = s.replace(/<br>/g, "\n");   
+  return s;   
+}
+
 var CList = React.createClass({
 	getInitialState: function(){
 		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -26,11 +39,11 @@ var CList = React.createClass({
 		}
 	},	
 	componentDidMount : function() {
-		//var mt = this.props.mt || 1002;
         this.fetchData('');
     },
     componentWillReceiveProps: function(nextProps){
     	var params = {};
+    	// 变化前的 props
     	// params.sort = this.props.sort || 0;
     	// params.video = this.props.video || 0;
     	params.sort = nextProps.sort || 0;
@@ -38,6 +51,7 @@ var CList = React.createClass({
     	params.mt = nextProps.mt;
     	params.st = nextProps.st;
     	params.tt = nextProps.tt;
+    	params.word = nextProps.word;
     	var query = '';
     	for(var key in params){
     		if(typeof params[key] != 'undefined') {
@@ -110,13 +124,31 @@ var CList = React.createClass({
 		course._priceCla = {};
 		course._priceCla.color = course.price == 0 ? '#5db61b' : '#e85308';
 		course._num = course.see_num > 0 ? course.see_num + '人观看' : course.apply_num + '人报名';
+		var wordReg = new RegExp(this.props.word, 'igm'),
+			seperator = '{%$%$}';
+			//debugger;
+		course.name = decodeHtml(course.name);
+		if(this.props.word){
+			course.name = course.name.replace(wordReg, seperator);
+			var _names = course.name.split(seperator);
+			course._beforeWord = _names[0];
+			course._afterWord = _names[1];
+		}
 		return(
 		    <TouchableOpacity>
 		        <View style={styles.row}>
 		            <View style={styles.container}>
 		                <Image style={styles.face} source={{uri : course.cover_url + '222'}}/>
 		                <View style={styles.right}>
-		                    <Text style={styles.name} numberOfLines="2">{course.name}</Text>
+		                {	this.props.word ? <Text style={styles.name} numberOfLines="2">{course._beforeWord}
+		                	{ 
+		                		course._afterWord ? 
+		                		<Text style={styles.highlight}>{this.props.word}</Text>
+		                		: null
+		                	}
+		                	{course._afterWord} </Text> : 
+		                    <Text style={styles.name} numberOfLines="2">{course.name}</Text> 
+		                 }
 		                    <Text style={styles.agency}>{course.agency_name}</Text>
 		                    <View style={{flex: 1, flexDirection: 'row'}}>
 		                    <Text style={[styles.price,course._priceCla]}>	                    
@@ -155,6 +187,7 @@ var styles = StyleSheet.create({
         color : '#bababa',
         backgroundColor : '#ffffff',
         fontSize : 12,
+
         
 	},
 	courseList: {
@@ -162,6 +195,7 @@ var styles = StyleSheet.create({
 		//backgroundColor: 'red'
 		// marginTop: -64
 		// marginTop: 41
+		paddingTop: 41
 	},
 	row: {
 		// marginLeft: 16,
@@ -197,6 +231,9 @@ var styles = StyleSheet.create({
 		fontSize: 15,
 		lineHeight: 20,
 		height: 40
+	},
+	highlight: {
+		color: 'red'
 	},
 	agency: {
 		fontSize: 13,
