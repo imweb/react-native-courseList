@@ -63,7 +63,7 @@ var CList = React.createClass({
         this.fetchData(query);
     },
 	fetchData: function(query, page){
-		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.id !== r2.id });
 		//alert(COURSE_LIST_CGI + query + '&page=' + (page || 1))
 		fetch(COURSE_LIST_CGI + query + '&page=' + (page || 1), {
 			method: 'GET',
@@ -116,6 +116,7 @@ var CList = React.createClass({
 			style={styles.courseList} 
 			keyboardShouldPersistTaps={true}
           	automaticallyAdjustContentInsets={false}
+          	removeClippedSubviews={true}
           	keyboardDismissMode="on-drag" />
 		)	
 	},
@@ -207,6 +208,7 @@ var styles = StyleSheet.create({
 	    justifyContent: 'center',
 	    paddingHorizontal: 15,
 	    paddingVertical: 8,
+	    //backgroundColor: 'red',
 	},
 	container: {
 		flex: 1,

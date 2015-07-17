@@ -63,6 +63,11 @@ var Page = React.createClass({
 	        
 	      </View>
 		)
+  // return (
+  //       <View style={styles.listContainer}>
+  //       </View>
+  //   )
+
 	},
   _setProps: function(name, val){
     /*  
