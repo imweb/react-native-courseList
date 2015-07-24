@@ -191,11 +191,10 @@ var CatList = React.createClass({
 var styles = StyleSheet.create({
 	wrapper: {
 		position: 'absolute',
-		//top: 75,
-		top: 64,
+		top: 74,
 		left: 0,
 		right: 0,
-		//marginTop: 41
+		marginTop: 40
 		// backgroundColor: 'red'
 	},
 	nav: {

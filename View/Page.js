@@ -12,6 +12,7 @@ var {
   Platform,
   Settings,
   StyleSheet,
+  Navigator,
   Text,
   TextInput,
   TouchableHighlight,
@@ -44,7 +45,7 @@ var Page = React.createClass({
     // sort 排序（0， 1， 2）
 		return (
 	      <View style={styles.listContainer}>
-
+          {textInput}
           <CList 
             mt={this.state.mt}  
             st={this.state.st} 
@@ -63,11 +64,6 @@ var Page = React.createClass({
 	        
 	      </View>
 		)
-  // return (
-  //       <View style={styles.listContainer}>
-  //       </View>
-  //   )
-
 	},
   _setProps: function(name, val){
     /*  
@@ -139,10 +135,10 @@ var styles = StyleSheet.create({
   },
   searchRow: {
     backgroundColor: '#eee',
-    paddingTop: 75,
+    paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 51,
+    paddingBottom: 10,
   },
   searchTextInput: {
     backgroundColor: 'white',
