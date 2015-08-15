@@ -1,11 +1,6 @@
 'use strict';
 var React =  require('react-native');
-
-var {Icon, } = require('react-native-icons');
-
 var Page = require('./Page');
-
-// var SubNav = require('./SubNav.js');
 
 var {
     StyleSheet,
@@ -138,9 +133,10 @@ var AllCats = React.createClass({
 				cat2: ds.cloneWithRows(cat2),
 				cat3: ds.cloneWithRows(cat3),
 				allData: data
-			}))
+			}));
 		})
 		.catch((err) => {
+
 		})
 		.done();
 	},
